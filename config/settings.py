@@ -1,5 +1,6 @@
 from pathlib import Path;
 import sys
 
-GEN_PY_PATH = Path.home() / "AppData" / "Local" / "Temp" / "gen_py" / "3.11 ";
-sys.path.append(str(GEN_PY_PATH));
+
+CAD_DRAWS_PATH = Path.home() / "cadDraws" 
+EXCEL_SHEETS_PATH = Path.home() / "excelSheets" 

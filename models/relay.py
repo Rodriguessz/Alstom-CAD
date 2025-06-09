@@ -6,22 +6,26 @@ from pywintypes import com_error
 
 @dataclass
 class Relay:
-    r: str                              # Nome ou identificação do relé
-    sin: str                            # Sinal do Rele
-    x: float                            # Posição X no CAD
-    y: float                            # Posição Y no CAD
-    layer: str                          # Camada (Layer) do relé
-    block_name: str                     # Nome do bloco CAD
-    description: Optional[str] = None   # Descrição opcional
+    r: str;                              # Nome ou identificação do relé
+    sin: str;                            # Sinal do Rele
+    x: float;                            # Posição X no CAD
+    y: float;                            # Posição Y no CAD
+    z: float;                            # Posição Z no CAD
+    layer: str;                          # Camada (Layer) do relé
+    block_name: str;                     # Nome do bloco CAD
+    description: Optional[str];          # Descrição opcional
 
-    def __init__(self, r , sin, x , y , layer , block_name):
-        self.r = r;
-        self.sin = sin;
-        self.x = x;
-        self.y = y;
-        self.layer = layer;
-        self.block_name = block_name;
+    def __init__(self):
+        self.r = None;
+        self.sin = None;
+        self.x = None;
+        self.y = None;
+        self.z = None;
+        self.layer = None;
+        self.block_name = "RELE";
+        self.description = f"Referencia de Bloco: {self.block_name}"
 
+    
 
 
         
