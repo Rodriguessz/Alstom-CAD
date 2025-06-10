@@ -22,7 +22,7 @@ class CadService:
             self.cad_reader.open_model_space();
 
             #Carrega a planilha do excel selecionada pelo usuário;
-            self.excel_reader.open_excel_sheet("MAPA_RELES");
+            self.excel_reader.open_excel_sheet("MAPEAMENTO RELÉS");
 
             #Recupera a data de última modificação do documento.
             last_modification_date = self.cad_reader.get_last_modification();
@@ -47,11 +47,12 @@ class CadService:
                     modifications = self.relayExtractor.compare_relays_state(relays_state, new_relays_state);
                     print(modifications)
 
-                    for mod in modifications:
-                        self.excel_reader.update_cell_by_value(mod["r"]["previous_state"], mod["r"]["new_state"]);
-                        
-                    
+                    #Aplica as modificações na planilha do excel.
+                    if modifications:
+                        self.excel_reader.aplly_relays_modifications(modifications)
+                            
                     self.excel_reader.save_changes();
+                    print("Planilha atualizada com sucesso!")
 
                     self.cad_reader.close_model_space()
                     return None;
@@ -60,6 +61,7 @@ class CadService:
  
         except Exception as e:
             print(f"Erro ao processar serviço: {e}")
+            self.cad_reader.close_model_space();
     
         
      

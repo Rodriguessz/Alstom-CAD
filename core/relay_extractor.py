@@ -60,20 +60,17 @@ class RelayExtractor:
         #Percore as duas listas de estados, verificando se há diferenças.
         for old_relay, new_relay in zip(relays_state, new_relays_state):
             modification = {}   
-            
-            # Compara a propriedade r e verifica se há alteração.
-            if old_relay.r != new_relay.r:
 
-                #Adiciona a alteração no dicionário, armazenando o valor atual e o anterior.
+            # Compara as propriedades ( R, SIN) verifica se há alteração. Caso haja, adidcio-nas em um dicionário com o valor antigo e o novo.
+            if old_relay.r != new_relay.r:
                 modification["r"] = {
                     "previous_state": old_relay.r,
                     "new_state": new_relay.r
                 }
-            # Compara a propriedade sin e verifica se há alteração.
+
             if old_relay.sin != new_relay.sin:
-                
-                #Adiciona a alteração no dicionário, armazenando o valor atual e o anterior.
                 modification["sin"] = {
+                    "r": old_relay.r,
                     "previous_state": old_relay.sin,
                     "new_state": new_relay.sin
                 }
