@@ -19,7 +19,7 @@ def main():
         
         
         #Inicializa o serviço de Automação do CAD.
-        service = CadService(cad_draw);
+        service = CadService(cad_draw, excel_sheet);
         service.process();
 
     except Exception as e:

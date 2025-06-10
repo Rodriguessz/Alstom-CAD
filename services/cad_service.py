@@ -1,4 +1,6 @@
 from core.cad_reader import CadReader;
+from core.excel_reader import ExcelReader;
+
 from pathlib import Path;
 from models.relay import Relay;
 from core.relay_extractor import RelayExtractor;
@@ -10,6 +12,7 @@ class CadService:
     def __init__(self, cad_file_path: Path, excel_file_path : Path):
         print(cad_file_path)
         self.cad_reader = CadReader(cad_file_path);
+        self.excel_reader = ExcelReader(excel_file_path);
         self.sheet_reader = None;
         self.relayExtractor = RelayExtractor();
 
@@ -17,6 +20,9 @@ class CadService:
         try:
             #Abre o desenho selecionado pelo usuário
             self.cad_reader.open_model_space();
+
+            #Carrega a planilha do excel selecionada pelo usuário;
+            self.excel_reader.open_excel_sheet("MAPA_RELES");
 
             #Recupera a data de última modificação do documento.
             last_modification_date = self.cad_reader.get_last_modification();
@@ -39,8 +45,14 @@ class CadService:
 
                     # Retorna todas as modificações 
                     modifications = self.relayExtractor.compare_relays_state(relays_state, new_relays_state);
+                    print(modifications)
 
- 
+                    for mod in modifications:
+                        self.excel_reader.update_cell_by_value(mod["r"]["previous_state"], mod["r"]["new_state"]);
+                        
+                    
+                    self.excel_reader.save_changes();
+
                     self.cad_reader.close_model_space()
                     return None;
                 else:
