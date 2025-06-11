@@ -7,7 +7,33 @@ from core.relay_extractor import RelayExtractor;
 import time;
 
 class CadService:
-    """Módulo que representa a lógica para automação do desenho no CAD"""
+    """A classe CadService é responsável por integrar a leitura de desenhos do AutoCAD
+    e a atualização de dados em planilhas do Excel, facilitando a automação no
+    gerenciamento de reles em projetos de CAD. Através da interação com os módulos
+    CadReader e ExcelReader, esta classe permite monitorar alterações em documentos
+    do AutoCAD e aplicar as modificações relevantes em uma planilha especificada.
+
+    Responsabilidades Principais:
+    - Abertura de Documentos: Abre desenhos do AutoCAD e planilhas do Excel conforme
+      o caminho de arquivo fornecido.
+    - Verificação de Modificações: Monitora constantemente as modificações no
+      desenho CAD, comparando o estado atual dos reles com um estado anterior.
+    - Extração de Dados: Utiliza a classe RelayExtractor para identificar e extrair
+      informações sobre reles a partir do desenho CAD.
+    - Aplicação de Alterações: Atualiza a planilha do Excel com as modificações
+      detectadas, garantindo que as informações permaneçam sincronizadas entre os
+      documentos CAD e Excel.
+    - Tratamento de Erros: Captura e trata exceções durante todo o processo de leitura
+      e atualização, garantindo a robustez do serviço.
+
+    Exemplo de Uso:
+        cad_service = CadService(Path('caminho/para/desenho.dwg'), Path('caminho/para/planilha.xlsx'))
+        cad_service.process()
+
+    Essa classe combina funcionalidades de leitura de CAD e Excel para permitir automações
+    eficientes em ambientes que exigem atualizações regulares e monitoramento de
+    configurações de reles em projetos de engenharia elétrica ou similares.
+    """
     
     def __init__(self, cad_file_path: Path, excel_file_path : Path):
         print(cad_file_path)
@@ -30,12 +56,10 @@ class CadService:
             #Recupera o estado atual dos reles no desenho.
             relays_state = self.cad_reader.map_rele_entities(self.relayExtractor);
 
-
             while True:
-
                 # Aguarda X tempo para verificar novamente se houve alteração no documento.
                 time.sleep(10)
-
+                    
                 new_modification_date = self.cad_reader.get_last_modification();
 
                 if last_modification_date != new_modification_date:

@@ -6,6 +6,12 @@ from pywintypes import com_error
 
 @dataclass
 class Relay:
+    """Classe que representa um relé associado a um bloco no AutoCAD.
+    
+        A classe Relay serve para encapsular as propriedades e atributos de um relé
+        em um desenho do AutoCAD, permitindo uma representação estruturada e fácil
+        manipulação dos dados relacionados a reles.
+    """
     r: str;                              # Nome ou identificação do relé
     sin: str;                            # Sinal do Rele
     x: float;                            # Posição X no CAD

@@ -5,7 +5,26 @@ from openpyxl.worksheet.worksheet import Worksheet
 from typing import Optional
 
 class ExcelReader:
-    """Classe representativa do EXCEL"""
+    """A classe ExcelReader oferece uma interface para interagir com arquivos do Excel,
+    permitindo carregar e manipular dados em planilhas de forma simples e eficiente.
+    
+    Responsabilidades Principais:
+    - Verificação da Existência do Arquivo: Verifica se o arquivo Excel especificado 
+      existe no sistema de arquivos antes de tentar carregá-lo.
+    - Abertura de Planilhas: Carrega uma planilha do arquivo Excel e permite a seleção 
+      da aba desejada, com suporte para selecionar a primeira aba por padrão.
+    - Busca de Valores: Permite procurar células baseadas em seus valores, retornando a
+      célula correspondente se encontrada, ou a busca por células em posições específicas.
+    - Atualização de Células: Facilita a atualização de células encontradas, seja 
+      por valor, seja por posição.
+    - Aplicação de Modificações: Permite aplicar modificações em relação a estados
+      detectados em um documento, atualizando as células correspondentes de acordo.
+    - Salvamento de Alterações: Salva as alterações realizadas na planilha em um novo 
+      local ou sobrescreve o arquivo original.
+
+    A classe utiliza a biblioteca OpenPyXL para manipulação de arquivos .xlsx, proporcionando
+    uma maneira eficiente de trabalhar com dados tabulares, sendo especialmente útil em 
+    automações e análises que requerem interação com documentos do Excel."""
 
     def __init__(self, file_path: Path ):
         self.file_path = file_path;
@@ -14,11 +33,11 @@ class ExcelReader:
         self.columns = ["A", "B"]
 
     def exists(self) -> bool:
-        """Verifica se o arquivo Excel existe"""
+        """Verifica se  o caminho do arquivo selecionado pelo usuário realmente existe"""
         return self.file_path.exists()
     
     def open_excel_sheet(self, sheet_name: str = None):
-        """Abre a planilha e carrega a aba especificada (ou a primeira, por padrão)"""
+        """Abre a planilha e carrega a aba especificada pelo usuário (ou a primeira, por padrão)"""
 
         if not self.exists():
             raise FileNotFoundError(f"Arquivo Excel não encontrado: {self.file_path}")
@@ -48,8 +67,16 @@ class ExcelReader:
                     return cell
         return None
     
+    def update_cell_by_value(self, target_value: str, new_value : str):
+        """Procura uma célula pelo valor e atualiza com novo valor"""
+        cell = self.find_cell_by_value(target_value)
+        if cell:
+            cell.value = str(new_value).upper();
+            return True
+        return False
+    
     def find_cell_by_position(self, position: str):
-        
+        """Procura na planilha inteira e retorna a célula na posição indicada (se existir)"""
         if not self.sheet:
             raise ValueError("Aba Excel não carregada.")
         try:
@@ -59,6 +86,7 @@ class ExcelReader:
             raise ValueError(f"A célula {position} não existe na planilha.")
 
     def update_cell_by_position(self, position: str, new_value):
+        """Procura uma célula pela posição indicada e atualiza com um novo valor."""
         cell = self.find_cell_by_position(position);
 
         if cell:
@@ -66,18 +94,9 @@ class ExcelReader:
             return True
         
         return False;
-
-    def update_cell_by_value(self, target_value: str, new_value : str):
-        """Procura uma célula pelo valor e atualiza com novo valor"""
-        cell = self.find_cell_by_value(target_value)
-        if cell:
-            cell.value = str(new_value).upper();
-            return True
-        return False
     
     def aplly_relays_modifications(self, modifications: list):
-        """Aplica todas as modificações detecadas no desenho na planilha"""
-
+        """Aplica todas as modificações detecadas no desenho na planilha."""
         
         for mod in modifications:
 
@@ -105,7 +124,8 @@ class ExcelReader:
                 self.update_cell_by_value(mod["r"]["previous_state"], str(mod["r"]["new_state"]));
 
     def save_changes(self, new_path: Optional[Path] = None):
-        """Salva as alterações feitas na planilha"""
+        """Salva as alterações feitas na planilha em um novo caminho ou sobreescreve o arquivo original."""
+        
         if not self.workbook:
             raise ValueError("Workbook não carregado.")
 

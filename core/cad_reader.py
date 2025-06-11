@@ -7,7 +7,28 @@ from core.interop import AutoCAD2021 as AutoCAD
 from pywintypes import com_error
 
 class CadReader:
-    """Classe representativa do AUTOCAD"""
+    """A classe CadReader atua como uma interface para interagir com desenhos do AutoCAD,
+    aproveitando a automação COM (Component Object Model) para ler e manipular informações
+    contidas em arquivos de desenho CAD. Sua implementação permite abrir, fechar, e acessar
+    o espaço do modelo de documentos CAD, além de extrair entidades específicas e fornecer
+    informações sobre a última modificação do arquivo.
+
+    Responsabilidades Principais:
+    - Gerenciamento do AutoCAD: Controla a instância do AutoCAD, garantindo visibilidade e
+      disponibilidade para interações.
+    - Verificação e Acesso a Arquivos: Valida a existência de arquivos CAD e permite a
+      abertura segura de documentos.
+    - Carregamento do Modelo: Aguarda até que o AutoCAD e o espaço do modelo estejam prontos
+      para interação.
+    - Extração de Entidades de Bloco: Coleta entidades de bloco, facilitando a identificação
+      de objetos específicos, como reles.
+    - Informações sobre Modificações: Capta informações sobre a última data de modificação
+      do arquivo CAD.
+
+    A classe utiliza a biblioteca pywin32 para se comunicar com a API do AutoCAD, proporcionando
+    um controle direto sobre a aplicação a partir do Python. O tratamento de exceções é robusto
+    para garantir a estabilidade nas interações com a aplicação.
+    """
     def __init__(self, file_path: Path):
         self.file_path = file_path;
         self.acad_app: AutoCAD.IAcadApplication = gencache.EnsureDispatch("AutoCAD.Application");
@@ -20,7 +41,7 @@ class CadReader:
             print(f"[Erro] AutoCAD não pôde ser tornado visível: {e}")
 
     def exists(self) -> bool:
-        """Verifica o caminho do arquivo selecionado pelo usuário"""
+        """Verifica se  o caminho do arquivo selecionado pelo usuário realmente existe"""
         return self.file_path.exists()
 
     def open_model_space(self) -> AutoCAD.IAcadModelSpace:
@@ -86,12 +107,13 @@ class CadReader:
                 attempts += 1
 
     def get_last_modification(self) -> str:
+        """Recupera a data da última modificação do arquivo"""
+        
+        #Recupera a data de modificação.
         modification_time  = os.path.getmtime(self.file_path);
     
-        # Transforma o valor retornado pelo getmtime em um valor legível usando ctime()
+        # Transforma o valor retornado pelo getmtime em um valor legível usando ctime();
         modification_time = time.ctime(modification_time);
-
-        print(f'Última alteração: {modification_time}');
     
         return modification_time;
 
@@ -118,6 +140,7 @@ class CadReader:
         atual dos reles no documento. É útil para comparar o estado dos reles em um 
         determinado momento com outro, permitindo identificar mudanças e modificações.
         """
+
         # Recupera as entidades de bloco do desenho;
         blocks = self.get_block_entities();
         
