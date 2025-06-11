@@ -1,5 +1,7 @@
 # AlstomCAD
 
+![Badge de status do projeto](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+
 AlstomCAD é um projeto que automatiza a manipulação de desenhos CAD, permitindo a modificação de reles em  desenhos AutoCAD especificos, refletindo essas mudanças em uma planilha Excel. O objetivo é simplificar o processo de atualização de informações relacionadas a reles em projetos de engenharia elétrica, proporcionando uma maneira eficiente de manter os dados sincronizados entre os formatos CAD e Excel.
 
 ## Features
